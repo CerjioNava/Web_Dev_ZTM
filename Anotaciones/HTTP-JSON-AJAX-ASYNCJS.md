@@ -6,17 +6,9 @@
    - JSON (PARSE, STRINGIFY)
    - AJAX (XHR, JQUERY, FETCH)
    - PROMISES (THEN, CATCH, PROMISE.ALL, PROMISE.RACE)
-   -
-   -
-   -
-   -
-   -
-   -
-   -
-   -
-   -
-   -
-   -
+   - ES8 (ASYNC AWAIT)
+   - ES9 (OBJECT SPREAD OPERATOR, FINALLY, FOR AWAIT OF)
+   - ES11 (ALLSETTLED)
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -272,6 +264,7 @@ NOTA: Cuando el "resolve" es satisfactorio, se llama "then". Si falla, se llama 
 Toma una Array de Promises y devuelve un array de valores en el orden de las promesas que se especificaron.
 Espera que todas las Promises se resuelvan para entonces devolver el array completo.
 Ejecuta todas las promesas y luego que estén listas, comienza a llamar los ".then" y ".catch" dependiendo si tienen exito o no.
+Todas las promises deben resolverse, sino solo devuelve el catch.
 
 ### Promise.race
 
@@ -370,12 +363,97 @@ NOTA: Dependiendo de la situación, Promises puede ser más cómodo que Async o 
 
 ## ES9 (ES2018)
 
+### Object Spread Operator
+
+	const animals = {
+		tiger: 25,
+		lion: 3,
+		monkey: 2,
+		bird: 40
+	}
+	const { tiger, lion, ...rest } = animals;
+	tiger			// 23
+	lion 			// 3
+	rest 			// {monkey:2, bird:40}
+
+	function objectSpread(p1, p2, p3) {
+		console.log(p1);
+		console.log(p2);
+		console.log(p3);
+	}
+	objectSpread(tiger, lion, rest);	// 23 | 3 | {monkey:2, bird:40}
+
+
+### finally
+
+Permite hacer algo luego de que una promesa ha terminado. Se añade al final.
+Funciona sin importar si funcionó el "then" o surge un error en "catch".
+
+Ejemplo: Del Promises Exercise:
+
+	const urls = [
+	  'http://swapi.dev/api/people/1',
+	  'http://swapi.dev/api/people/2',
+	  'http://swapi.dev/api/people/3',
+	  'http://swapi.dev/api/people/4'
+	]
+
+	Promise.all(urls.map(url =>
+	    fetch(url).then(people => people.json())
+	))
+	  .then(array => {
+	    console.log('1', array[0])
+	    console.log('2', array[1])
+	    console.log('3', array[2])
+	    console.log('4', array[3])
+	  })
+	  .catch(err => console.log('ughhhh fix it!', err))	
+	  .finally(() => console.log('extra'));
+
+### for await of 
+
+Permite hacer loop a través de las llamadas Async Await (si tenemos varias).
+Recordamos que "for of" permitía iterar sobre iterables, ahora podemos iterar sobre los "awaits promises" que tengamos.
+
+Ejemplo: Del Async Await section:
+
+	cont urls = [
+		'https://jsonplaceholder.typicode.com/users',
+		'https://jsonplaceholder.typicode.com/posts',
+		'https://jsonplaceholder.typicode.com/albums'
+	];
+
+	const getData = async function() {
+		try {
+			const { user, posts, albums } = await Promise.all(urls.map(url => 
+				fetch(url).then(resp => resp.json())
+			))
+			console.log('users', users);
+			console.log('posts', posts);
+			console.log('albums', albums);
+		} catch (err){
+			console.log('oops', err);
+		}
+	}
+
+	// Creamos una nueva función que haga lo mismo, pero con "for await of".
+	const getData2 = async function() {
+		const arrayOfPromises = urls.map(url => fetch(url));
+		for await (let request of arrayOfPromises) {
+			const data = await request.json();
+			console.log(data);
+		}
+	}
+
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
-##
+## ES2020 
+
+### Promise.allSettled()
+
+A diferencia de "Promise.all", esta puede ejecutar todas las promesas sin importar si todas se resolvieron o no.
+Devuelve las promesas tanto resueltas como rechazadas.
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
-##
-
------------------------------------------------------------------------------------------------------------------------------------------------
+ES6-ES11 Features: 		https://github.com/daumann/ECMAScript-new-features-list
