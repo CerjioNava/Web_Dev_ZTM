@@ -1,0 +1,39 @@
+
+body {
+	margin: 0px;
+}
+
+.container {
+	display: flex;				/* Activamos el flexbox */
+	flex-wrap: wrap; 			/* Seleccionamos flex-wrap (se escogió) */
+	justify-content: center;	/* Propiedad de flex-wrap */
+
+}
+
+h1 {
+	font-family: fantasy;
+	font-size: 3em;
+	border-bottom: 2px solid pink;	/* Una linea de borde debajo del header */
+	border-right: 2px solid pink;	/* Otro borde a la derecha */
+	width: 400px;					/* El ancho del header */
+	text-align: center;				/* Alineamos el texto al centro del header*/
+	-moz-box-shadow:4px 4px 5px #888888;
+	-ms-box-shadow: 4px 4px 5px #888888;
+	-webkit-box-shadow: 4px 4px 5px #888888;
+	-o-box-shadow: 4px 4px 5px #888888;
+	box-shadow: 4px 4px 5px #888888; 	/* CSS 3 */
+	margin-top: 10px;
+}
+
+
+img {
+	width: 550px;
+	height: 350px;
+	margin: 10px;			/* Margen para separar las imagenes entre si */
+	transition: all 0.5s; 	/* CSS 3 */
+}
+
+img:hover {
+	transform:scale(1.05);
+
+}

@@ -1,0 +1,50 @@
+/*
+BASE DE CSS:
+
+Selector {
+	Property:value;
+}
+
+*/
+
+body {
+	background-image: url(background.png);
+	background-size:  cover;
+
+}
+
+
+h2 {
+	color:blue;	
+	background-color: lightyellow;
+}
+
+p {
+	font-size: 20px;
+	color:white;
+}
+
+span {
+	/* font-size: 120%; */
+	font-size: 5em;
+	font-weight: bold;
+}
+
+.boxmodel {
+	border: 5px solid green;
+	display: inline-block;
+	/*padding: 20px;*/ 				/* Espaciamiento dentro del bloque*/
+	padding: 5px 20px 5px 20px;		/* Top, Right, Bottom, Left */
+	/*margin: 20px;					/* Espaciamiento entre bloques */
+	/*margin: 0px 20px 0px 20px;*/  /* Tambien con dos dimesiones asume arriba-abajo, izquierda-derecha: */
+	margin: 0px 20px;
+	width: 32px;
+	height: 55px;
+
+}
+
+
+
+
+
+

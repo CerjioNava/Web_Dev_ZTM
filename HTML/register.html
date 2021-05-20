@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Register</title>
+</head>
+<body>
+	<!-- Use GET for this example, not POST -->
+	<form method="GET">
+		First Name: <input type="text" name="firstname"> <br>			<!-- Prueba de formas e inputs y distintos tipos -->
+		Last Name: 	<input type="text" name="lastname"> <br>
+		Email: 		<input type="email" name="email" required> <br>		<!-- "required" hace que el campo sea obligatorio en submit -->
+		Password: 	<input type="password" name="password" min="5"> <br>
+		Birthday: 	<input type="date" name="birthday"> <br>
+		Gender: <br>
+			<input type="radio" name="gender" value="Male"> Male <br>  	<!-- Varios inputs con el mismo "name" los hace familiares -->
+			<input type="radio" name="gender" value="Female"> Female <br>
+			<input type="radio" name="gender" value="Other"> Other <br>
+		Pets: <br>
+			<input type="checkbox" name="cat"> Cat <br>
+			<input type="checkbox" name="dog"> Dog <br>
+			<input type="checkbox" name="other"> Other <br>
+
+		Cars: <br>		
+		<select name="cars">										<!-- Selección de valores -->
+			<option value="Volvo" name="volvo"> Volvo </option>
+			<option value="Audi" name="audi"> Audi </option>
+		</select>
+
+
+		<input type="submit" value="Register!"> 		<!-- Cambiando "value" se cambia lo que se muestra en el botón -->
+		<input type="reset">
+	</form>
+</body>
+</html>
+
+<!-- 
+* La salida en la URL luego de submit (GET), es la siguiente: *
+?firstname=Sergio
+&lastname=Nava
+&email=cerjionava%40gmail.com
+&password=turururur123
+&birthday=2021-04-06
+&gender=Male
+&other=on
+&cars=Audi
+ESTO SE CONOCE COMO URL ENCODING
+-->

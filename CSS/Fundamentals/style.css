@@ -1,0 +1,87 @@
+/*
+BASE DE CSS:
+
+Selector {
+	Property:value;
+}
+
+*/
+
+* {
+	text-align: right;
+}
+
+body {
+	background-image: url(background.png);
+	background-size:  cover;
+
+}
+
+p {
+	color:#AC4E00;	
+	/*background-color: cyan;*/
+	text-align: center;
+	border: 5px dashed rgb(52, 2, 80);
+	cursor: pointer;
+}
+
+p {
+	/*text-decoration: underline;*/
+	text-transform: uppercase;
+	line-height: 30px;
+	font-style: oblique;
+	font-weight: bold;
+	font-size: 115%;
+	font-family: 'Poiret One', cursive;
+
+
+}
+
+/*
+Si repetimos dos veces una modificación para "p", como se trata de un Cascading Style Sheet, se queda con el último.
+*/
+
+p {
+	color:pink; /* !important; */
+}
+
+p {
+	color:white;
+}
+
+img {
+	float:left;
+}
+
+footer {
+	clear: both;
+	text-align: center;
+	color: white;
+	font-size: 150%;
+}
+
+
+li {
+	list-style: none;
+	display: inline-block;
+}
+
+.webtext {
+	border: 3px dashed green;	
+}
+
+.active {
+	color:black;
+}
+
+#div1:hover {
+	background: rgba(0, 255, 0, 0.15);
+}
+
+#div2 {
+	background: rgba(0, 255, 255, 0.15);
+}
+
+
+
+
