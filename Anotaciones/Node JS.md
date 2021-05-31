@@ -10,7 +10,15 @@
    - TYPES OF MODULES
    - BUILDING A SERVER (Response, Request)
    
-   - EXPRESS.JS
+   **EXPRESS.JS**
+   - INTRODUCTION TO EXPRESS.JS
+   - EXPRESS MIDDLEWARE
+   - POSTMAN (IMPORTANTE PARA BACKEND Y SERVIDORES)
+   - RESTFUL APIS (STATELESS, REQUEST, RESPONSE, STATIC ASSETS)
+   -
+   -
+   -
+   -
    -
    -
 
@@ -109,6 +117,11 @@ A partir del ES6, es posible utilizar imports y exports.
 
 Sin embargo, como Node fue creado inicialmente con el Common JS, debemos especificar como queremos que Node lea los archivos y así saber que utilizamos la sintaxis de la versión ES6.
 
+Tenemos dos maneras de solucionar esto:
+
+   * .js to .mjs
+   * "type": "module" en package.json
+
 ### .js to .mjs
 
 Para solucionar esto, podemos cambiar la extensión de los archivos ".js" a ".mjs". Talq ue:
@@ -194,9 +207,133 @@ IMPORTANTE: **VER server.js**
 
 ## Express.js
 
+Actualmente es la librería o framework por excelencia. Instalaremos Express.
+
+   > npm install express
+
+Ahora, creando un servidor express:
+
+   > //const express = require('express');   // Esta era la forma ES6-
+     import express from 'express';          // Forma ES6+
+     const app = express();
+     app.listen(3000);
+
+Para hacer un Get Request:
+
+   > app.get('/', (req, res) => {    
+      //res.send("Hellooo");                 // Se convierte automáticamente a HTML
+      //res.send("<h1>Hellooo</h1>");        // Envío de HTML
+      
+      const user = {                   // Información JSON
+         name: 'Sally',
+         hobby: 'Soccer'
+      }
+      res.send(user);                  // Enviando JSON
+     });
+
+NOTA: Si tengo problemas por PID, debo encontrar el PID del proceso que debo cerrar. Typeo en el Command Prompt:
+
+   > netstat -a -n -o | find "3000"
+
+State of Javascript Survey:      https://stateofjs.com/
+
 --------------------------------------------------------------------------------------------------------------------------------------------
 
-##
+## Express Middleware
+
+Middleware se refiere a un "Intermediario".
+En este caso, mientras el request entre, va a pasar a través del "use()" y manejar como trabajar con las acciones PUT, GET, POST, DELETE.
+
+   > app.use((req, res, next) => {
+      console.log('<h1>Hellooo</h1>');
+      next();                          // Se usa Next para seguir ejecutando el resto del código.
+     });
+
+El concepto de Middleware refiere a algo que se recibe por adelantado antes de que llegue a las rutas, el request lo modifica y entonces llama "next()" para seguir ejecutando el código.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+## Postman (IMPORTANTE PARA BACKEND Y SERVIDORES)
+
+- Permite el envío de peticiones (request) HTTP REST sobre APIs sin necesidad de desarrollar un cliente.
+- Es una herramienta que nos permite hacer request a un servidor y ver que recibimos. 
+- Podemos hacer GET, POST, PUT, DELETE, etc.
+
+   * Haciendo GET en "localhost:3000/profile", recibimos los Headers, el Body, etc.
+
+   * Haciendo POST enviando un response, añadiendo cosas al Body usando 'x-www-form-urlencoded'.
+     Además debemos usar un Middleware (usamos express, body-parser ya no se usa).
+
+   * Haciendo POST enviando JSON, usamos 'raw' y 'JSON' en Postman.
+
+NOTA: En el curso utilizaban "body-parser", pero en las nuevas versiones de Express no es necesario. Sustituimos "body-parser" por "express".
+
+**IMPORTANTE: SI HAY CONFUSIÓN, VEMOS EL VIDEO DE NUEVO!**
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+## RESTful APIs
+
+- Define un conjunto de funciones de modo que los desarrolladores pueden realizar Requests y recibir Responses, via HTTP (GET, POST, ...).
+- Una API que es RESTful sigue las reglas que todos pueden aceptar y así tener compatibilidad entre distintos sistemas.
+
+Una RESTful API usa:
+
+   * GET para recibir un recurso.
+   * PUT para cambiar un estado.
+   * POST para crear un recurso.
+   * DELETE para eliminar.
+
+Es una manera de definir nuestro servidor de manera que espicifique que puede proveer y como utilizarlo.
+
+- Por ejemplo:   En una url '/profile', esperamos recibir (GET), añadir (POST), actualizar (PUT) o eliminar (DELETE) un perfil.
+
+### Stateless
+
+- REST APIs son llamadas 'Stateless'.
+- Los llamados se realizan independiente uno del otro, y cada uno contiene toda la data necesaria para completarse exitosamente. 
+- De manera que cada Request que se reciba posea la información necesaria con la que el servidor puede Responder.
+
+NOTA: Recordamos como un browser envía una Request y el servidor devuelve un Response.
+
+### Request
+
+Un objeto Request tiene algunas propiedades, las más utilizadas son:
+
+   > app.get('/', (req, res) => {
+      //console.log(req.query);           // http://localhost:3000/?name=andrei&age=31
+      //console.log(req.body);
+      //console.log(req.headers);            // Vease si envío un header desde postman
+      //console.log(req.params);
+     });
+
+   * .query: Es lo que obtenemos cuando hacemos un GET query (a través de la URL por ejemplo). 
+
+   * .body: Utilizando un middleware como '.urlencoded()' o '.JSON()', podemos recibir lo que la Request envío al body. 
+
+   * .headers: Devuelve todos los headers. 
+
+   * .params: Accede a los parámetros en el URL y los utiliza. Por ejemplo:
+
+      > app.get('/:id', (req, res) => {
+         console.log(req.params);               // Si inserto "http://localhost:3000/12345", recibo {id: '12345'} en consola.
+        });
+
+### Response
+
+Podemos responder con un estado, por ejemplo:
+   
+   > app.get('/', (req, res) => {
+      res.status(404).send("Not found :(");
+     });
+
+### Static Assets
+
+Ahora, que pasa si quisieramos servir "Static Assets" como 'index.html', 'style.css', 'script.js', etc?
+Usamos el Middleware con "express.static(/root)":
+
+   > const __dirname = process.cwd()      // Cree esto porque Node ya no tiene esta propiedad.
+     app.use(express.static(__dirname + '/public'));
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 

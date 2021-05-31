@@ -31,17 +31,33 @@ server.listen(3000);										// Le otorgamos el puerto donde escuchará. 'http:
 
 import express, { response } from 'express';
 
+const __dirname = process.cwd()		// Cree esto porque Node ya no tiene esta propiedad.
 const app = express();
 
-app.use(express.urlencoded({extended: false}));	// Middleware (body-parser ya no)
-app.use(express.json());
+//app.use(express.urlencoded({extended: false}));	// Middleware (body-parser ya no)
+//app.use(express.json());
 
+app.use(express.static(__dirname + '/public'));
+
+/*
+app.get('/', (req, res) => {
+	res.send("Getting root");	
+	//console.log(req.query);				// http://localhost:3000/?name=andrei&age=31
+	//console.log(req.body);		
+	//console.log(req.headers);				// Vease si envío un header desde postman
+	//console.log(req.params);
+});
+*/ 
+
+/*
 app.get('/', (req, res) => {
 	res.send("Getting root");					// Enviando JSON
 });
+
 app.get('/profile', (req, res) => {
 	res.send("Getting profile");				// Enviando JSON
 });
+
 app.post('/profile', (req, res) => {		// Esto funciona si realmente se envía data.
 	
 	// Para que esto funcione, usamos un middleware.
@@ -50,15 +66,15 @@ app.post('/profile', (req, res) => {		// Esto funciona si realmente se envía da
 
 	//res.send("Hellooo");					// Se convierte automáticamente a HTML
 	//res.send("<h1>Hellooo</h1>");			// Envío de HTML
-	/*
-	const user = {
-		name: 'Sally',
-		hobby: 'Soccer'
-	}
+	
+	//const user = {
+	//	name: 'Sally',
+	//	hobby: 'Soccer'
+	//}
 	res.send(user);
-	*/
+	
 })
-
+*/
 
 app.listen(3000);
 
