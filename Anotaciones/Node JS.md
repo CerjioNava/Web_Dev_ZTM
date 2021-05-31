@@ -8,8 +8,9 @@
    - MODULES IN NODE (require(), module.exports)
    - ES6 MODULES IN NODE (import, export)
    - TYPES OF MODULES
-   -
-   -
+   - BUILDING A SERVER (Response, Request)
+   
+   - EXPRESS.JS
    -
    -
 
@@ -128,10 +129,82 @@ Ahora simplemente añadimos "type": "module" dentro del package.json.
 
 ## Types of Modules
 
-1. Existen los módulos que creamos nosotros mismos, como el "script2.js" del ejemplo anterior.
+1. Módulos creados por nosotros mismos, como el "script2.js" del ejemplo anterior.
 
-2. Built-in Modules: Vienen predeterminados con Node.
+2. Built-in Modules: Vienen predeterminados con Node. Algunos serían:
 
+   * fs (file system)
+
+      > const mod = require('fs');
+
+   * http (para crear servidores)
+
+      > const mod = require('http');
+
+   * ...
+
+3. NPM Modules. 
+
+   > npm init -y
+   > npm install nodemon --save-dev         // Por ejemplo, nodemon
+
+   NOTA: --save-dev instala el módulo en "devDependencies", donde solo se utilizara cuando estemos desarrollando la aplicación. No se incluira cuando se hace el deployment.
+
+* Nodemon: Sirve para ejecutar el script en la consola mientras se realicen cambios.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+## Building a Server
+
+Creamos un archivo "server.js" y lo añadimos al "Package.json" en los scripts que Node escuchará.
+
+   > "scripts": {
+      "start": "nodemon server.js"
+     }, 
+
+Usaremos el módulo "http" para la creación del servidor.
+
+   > //const http = require('http');                        // Usamos el modulo "http" de Node. ESTA FORMA NO.
+   > import http from 'http';                               // ESTA FORMA SI!
+
+   > const server = http.createServer( () => {              // Creamos un servidor con http.
+      console.log('I hear you! Thanks for the request!') 
+   });
+
+   > server.listen(3000);                                   // Le otorgamos el puerto donde escuchará. 'http://localhost:3000/'
+
+### Request y Response (VER 'HTTP-JSON-AJAX+ASYNCJS.md')
+
+Request nos brinda información de la request que hacemos en el front end.
+
+   > const server = http.createServer( (request, response) => {     // Creamos un servidor con http. Podemos escuchar a 'request' y 'response".
+      console.log('headers', request.headers);              
+      
+      const user = { name: 'John', hobby: 'Skating' };
+      
+      response.setHeader('Content-Type', 'application/json');  // Describimos el tipo de contenido vamos a enviar. Asi describimos JSON.
+      response.end(JSON.stringify(user));                      // Contenido JSON.
+     });
+
+Sin embargo, este ultimo ejemplo lo hicimos utilizando módulo "http". Actualmente es mucho más eficiente trabajar con Express.js.   
+
+IMPORTANTE: **VER server.js**
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+## Express.js
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+##
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+##
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+##
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 

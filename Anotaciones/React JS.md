@@ -9,9 +9,10 @@
    - REACT COMPONENT (JSX, PROPERTIES)
    - BUILDING A REACT APP I (REACT FRAGMENT)
    - BUILDING A REACT APP II & III (STATES)
-   -
-   -
-   -
+   - BUILDING A REACT APP IV (FETCH, LIFECYCLE HOOKS)
+   - BUILDING A REACT APP V & VI (CHILDRENDS, FOLDER STRUCTURE)
+   - ERROR BOUNDARY
+   - DEPLOYING
    
 
 ------------------------------------------------------------------------------------------------------------------------------------------------

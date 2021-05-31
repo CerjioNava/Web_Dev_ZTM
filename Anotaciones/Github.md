@@ -47,6 +47,8 @@ Permite manejar problemas como el Merge Conflict.
 
 Los siguientes comandos son muy importantes, sin embargo en la siguiente sección se aprecia el verdadero desempeño real.
 
+### git init
+
 ### git clone
 
 Permite clonar el proyecto de github.
