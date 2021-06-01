@@ -235,7 +235,10 @@ NOTA: En el componente se suele devolver un solo elemento del componente, por es
 
 ### State
  
-Es un objeto que describe tu aplicación. A diferencia de las propiedades, state puede cambiar.
+- Es un objeto que describe tu aplicación. A diferencia de las propiedades, state puede cambiar.
+- Se le llama así porque en un momento puede tener un valor dado, y en otro momento cambia de "estado" a otro valor.
+- Por ejemplo: Un estado de "Inicio de Sesión (logged)" que es "false", y al iniciar sesión cambia a "true".
+
 Para este caso, cambiariamos los "robots" que se muestran desde el "robot.js".
 Es decir:
 

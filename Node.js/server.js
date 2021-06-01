@@ -31,12 +31,12 @@ server.listen(3000);										// Le otorgamos el puerto donde escuchará. 'http:
 
 import express, { response } from 'express';
 
-const __dirname = process.cwd()		// Cree esto porque Node ya no tiene esta propiedad.
 const app = express();
 
 //app.use(express.urlencoded({extended: false}));	// Middleware (body-parser ya no)
 //app.use(express.json());
 
+const __dirname = process.cwd()		// Cree esto porque Node ya no tiene esta propiedad.
 app.use(express.static(__dirname + '/public'));
 
 /*
@@ -62,7 +62,7 @@ app.post('/profile', (req, res) => {		// Esto funciona si realmente se envía da
 	
 	// Para que esto funcione, usamos un middleware.
 	console.log(req.body);					// Si queremos acceder a la información enviada en postman.
-	res.send("Success");							// Enviando JSON
+	res.send("Success");					// Enviando JSON
 
 	//res.send("Hellooo");					// Se convierte automáticamente a HTML
 	//res.send("<h1>Hellooo</h1>");			// Envío de HTML

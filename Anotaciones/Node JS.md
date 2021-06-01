@@ -15,12 +15,9 @@
    - EXPRESS MIDDLEWARE
    - POSTMAN (IMPORTANTE PARA BACKEND Y SERVIDORES)
    - RESTFUL APIS (STATELESS, REQUEST, RESPONSE, STATIC ASSETS)
-   -
-   -
-   -
-   -
-   -
-   -
+   - EXTRA: REST’s Architectural Constraints
+   - NODE FILE SYSTEM MODULE
+   - EXERCISE: SANTA'S NODE HELPER
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -163,7 +160,7 @@ Ahora simplemente añadimos "type": "module" dentro del package.json.
 
    NOTA: --save-dev instala el módulo en "devDependencies", donde solo se utilizara cuando estemos desarrollando la aplicación. No se incluira cuando se hace el deployment.
 
-* Nodemon: Sirve para ejecutar el script en la consola mientras se realicen cambios.
+   * Nodemon: Sirve para ejecutar el script en la consola mientras se realicen cambios.
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -220,7 +217,7 @@ Ahora, creando un servidor express:
 
 Para hacer un Get Request:
 
-   > app.get('/', (req, res) => {    
+   > app.get('/', (req, res) => {            // El primer parámetro es la URL.
       //res.send("Hellooo");                 // Se convierte automáticamente a HTML
       //res.send("<h1>Hellooo</h1>");        // Envío de HTML
       
@@ -272,9 +269,10 @@ NOTA: En el curso utilizaban "body-parser", pero en las nuevas versiones de Expr
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
-## RESTful APIs
+## RESTful APIs (Representational State Transfer)
 
-- Define un conjunto de funciones de modo que los desarrolladores pueden realizar Requests y recibir Responses, via HTTP (GET, POST, ...).
+- REST es un patrón de arquitectura para la creación de Web Services. RESTful es el servicio que aplica ese patrón.
+- Define un conjunto de funciones tal que los desarrolladores puedan realizar Requests y Responses, via HTTP (GET, POST, ...).
 - Una API que es RESTful sigue las reglas que todos pueden aceptar y así tener compatibilidad entre distintos sistemas.
 
 Una RESTful API usa:
@@ -288,9 +286,9 @@ Es una manera de definir nuestro servidor de manera que espicifique que puede pr
 
 - Por ejemplo:   En una url '/profile', esperamos recibir (GET), añadir (POST), actualizar (PUT) o eliminar (DELETE) un perfil.
 
-### Stateless
+### Stateless (No estático)
 
-- REST APIs son llamadas 'Stateless'.
+- REST APIs son llamadas 'Stateless' o 'No estáticas'.
 - Los llamados se realizan independiente uno del otro, y cada uno contiene toda la data necesaria para completarse exitosamente. 
 - De manera que cada Request que se reciba posea la información necesaria con la que el servidor puede Responder.
 
@@ -337,14 +335,102 @@ Usamos el Middleware con "express.static(/root)":
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
-##
+## EXTRA: REST’s Architectural Constraints
+
+Here is a summary of the constraints.
+
+### Client-server 
+
+   REST applications have a server that manages application data and state. The server communicates with a client that handles the user interactions. A clear separation of concerns divides the two components. This means you can update and improve them in independent tracks.
+   
+### Stateless 
+
+   Servers don’t maintain any client state. Clients manage their application state. Their requests to servers contain all the information required to process them (Using a token the server gave to the user before).
+   
+### Cacheable 
+   
+   Servers must mark their responses as cacheable or not. So, infrastructures and clients can cache them when possible to improve performance. They can dispose of non-cacheable Information, so no client uses stale data.
+   
+### Uniform interface 
+   
+   This constraint is REST’s most well known feature or rule, depending on who you ask. Fielding says “The central feature that distinguishes the REST architectural style from other network-based styles is its emphasis on a uniform interface between components.” REST services provide data as resources, with a consistent namespace. We’ll cover this in detail below.
+   
+### Layered system 
+
+   Components in the system cannot “see” beyond their layer. So, you can easily add load-balancers and proxies to improve security or performance.
+
+A RESTful service is more than a web server that exchanges JSON, or any other, documents. These constraints work together to create a very specific type of application.
+
+** MORE INFORMATION:    https://blog.ndepend.com/rest-vs-restful/ **
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
-##
+## Node File System Module
+
+File System permite acceder a nuestro File System y realizar acciones con dichos archivos. 
+
+   >  //const fs = require('fs');            // Importamos "File System"
+      import fs from 'fs';
+
+### fs.readFile()
+
+   >  fs.readFile('./hello.txt', (err, data) => {     // Lee un archivo 'hello.txt' y usa un "CALLBACK".
+         if (err) { console.log('errooor'); }
+
+         //console.log(data)              // Si no se codifica, devuelve un 'raw buffer'.
+         console.log(data.toString());    // Si no se especifica la codificación, usa 'utf8' que 'lee' el raw buffer.
+      });
+
+NOTA: UTF8 es un estandar en HTML5 para texto.
+
+### fs.readFileSync()
+
+   >  const file = fs.readFileSync('./hello.txt');
+      console.log('SYNC -', file.toString());
+
+### readFile() vs readFileSync()
+
+   * readFile(): Es Asíncrono y usa un Callback. Para el ejemplo anterior, 'readFile' se llama pero mientras se ejecuta la función, se sigue ejecutando el resto del código hasta que la función haya finalizado y devuelva un valor.
+
+   * readFileSync(): Es Síncrono. Para el ejemplo anterior, 'readFileSync' se llama y no se ejecuta más código hasta que dicha función termine.
+
+   Es decir, al ejecutar ambas funciones en "script.js", primero se imprime 'readFileSync' antes que 'readFile', probablemente.
+
+**IMPORTANTE: Cada uno tiene su uso, sin embargo a la hora de crear un servidor, 'readFile' es una mejor opción ya que al leer uno o varios archivos pesados no estaríamos deteniendo/bloqueando la ejecución y respuesta del servidor. **
+
+### appendFile()
+
+Podemos agregar contenido al archivo que estamos ubicando.
+
+   >  fs.appendFile('./hello.txt', ' - Append is pretty cool!', err => {
+         if (err) { console.log(err); }
+      });   
+
+NOTA: Si el archivo no existe, lo crea.
+
+### writeFile()
+
+   >  fs.writeFile('bye.txt', 'Sad to see you go', err => {
+         if (err) { console.log(err); }
+      });
+
+
+
+**VEASE 'script.js'**
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
-##
+## EXERCISE: SANTA'S NODE HELPER
+
+NOTA: Usaremos "console.time()" y "console.timeEnd()".
+
+CHALLENGE:  https://adventofcode.com/2015/day/1
+THINK LIKE A PROGRAMMER: https://www.freecodecamp.org/news/how-to-think-like-a-programmer-lessons-in-problem-solving-d1d8bf1de7d2/
+
+### Enunciado
+
+   > https://adventofcode.com/2015/day/1
+
+**VÉASE ./santa-challenge/script.js**
 
 --------------------------------------------------------------------------------------------------------------------------------------------

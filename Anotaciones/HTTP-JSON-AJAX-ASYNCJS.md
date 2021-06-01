@@ -273,7 +273,7 @@ Por ende, devolverá solo un valor en vez de un array de valores.
 
 ### EJEMPLO FINAL
 
-	cont urls = [
+	const urls = [
 		'https://jsonplaceholder.typicode.com/users',
 		'https://jsonplaceholder.typicode.com/posts',
 		'https://jsonplaceholder.typicode.com/albums'
@@ -281,7 +281,7 @@ Por ende, devolverá solo un valor en vez de un array de valores.
 
 	Promise.all(urls.map(url => {
 		return fetch(url).then(resp => resp.json())			// JSON a JS PROMISE
-	})).then(results => {									// Respuesta al Promise para manipularla
+	})).then(results => {											// Respuesta al Promise para manipularla
 		console.log(results[0]);
 		console.log(results[1]);
 		console.log(results[2]);

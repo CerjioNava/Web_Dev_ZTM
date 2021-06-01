@@ -1,23 +1,42 @@
-// Ejemplo Node.js
+// File System Example
 
-// import script2 from 'script2.js'; 		// No funciona en Node
+//const fs = require('fs');				// Importamos "File System"
+import fs, { fstatSync } from 'fs';
 
-//const script2 = require('./script2.js'); 	// Esta era la manera que usaba Node
+// READFILE (ASYNC)
+fs.readFile('./hello.txt', (err, data) => {		// Lee un archivo.
+	if (err) {
+		//throw err;
+		console.log('errooor');
+	}
+	//console.log(data)					// Si no se codifica, devuelve un 'raw buffer'.
+	console.log('ASYNC -', data.toString());		// Si no se especifica la codificación, usa 'utf8'.
+});
 
-// La nueva forma de Node.
-import { largeNumber } from './script2.js';
+// READFILESYNC (SYNC)
+const file = fs.readFileSync('./hello.txt');
+console.log('SYNC -', file.toString());
 
-const a = 10;
-const b = 5;
-//const c = script2.largeNumber;
-const c = largeNumber;
+// APPEND
+// fs.appendFile('./hello.txt', ' - Append is pretty cool!', err => {
+// 	if (err) {
+// 		console.log(err);
+// 	}
+// });
 
-console.log(a + c);
 
-// global.setTimeout()
-setTimeout( () => {
-	console.log(a + b + 1, " setTimeout de 1 segundos");	
-}, 1000);
+// WRITEFILE
+fs.writeFile('bye.txt', 'Sad to see you go', err => {
+	if (err) {
+		console.log(err);
+	}
+	console.log('bye.txt was created')
+});
 
-// Devolvemos el directorio
-//console.log(__dirname);
+// DELETE
+fs.unlink('./bye.txt', err => {
+	if (err) { 
+		console.log(err) 
+	}
+	console.log('Inception');
+})
