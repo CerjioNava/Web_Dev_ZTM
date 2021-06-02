@@ -232,6 +232,10 @@ NOTA: Si tengo problemas por PID, debo encontrar el PID del proceso que debo cer
 
    > netstat -a -n -o | find "3000"
 
+También podemos enviar Json de la manera:
+
+   > res.json('Send this in JSON format');
+
 State of Javascript Survey:      https://stateofjs.com/
 
 --------------------------------------------------------------------------------------------------------------------------------------------

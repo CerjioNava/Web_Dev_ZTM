@@ -56,6 +56,7 @@ DESCARGA:	https://nodejs.org/en/
 Para utilizar NPM y obtener los JSON:
 
 	> npm init			// Crea un package.json file en tu directorio. Hacer esto al inicio del proyecto.
+	> npm init -y
 
 Para verificar las versiones de NODE y NPM:
 

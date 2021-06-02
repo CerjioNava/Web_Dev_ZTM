@@ -7,9 +7,16 @@
    -
 
    - BACKEND
+   - /signin
+   - /register
+   - /profile:id
+   - /image
    -
    -
    -
+   -
+   -
+
 
 Clarifai API:			https://www.clarifai.com/
 React Tilt:				https://www.npmjs.com/package/react-tilt
@@ -36,6 +43,122 @@ https://reactjs.org/docs/react-component.html#setstate
 
 npm install clarifai-nodejs-grpc
 .predict('c0c0ac362b03416da06ab3fa36fb58e3', this.state.input)
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+## BACKEND - SERVER
+
+- Es importante tener una idea de como queremos que funcione nuestra API antes de hacerla.
+
+OBJETIVOS: Primero crearemos el funcionamiento para las siguientes rutas.
+
+      '/'                  --->  res = this is working             - Pagina inicial.
+      '/signin'            --->  POST = success/fail               - Vamos a postear data y respondera con success o fail. Evitamos las query string.
+      '/register'          --->  POST = user                       - Vamos a postear data nueva.
+      '/profile/:userId'   --->  GET = user                        - Cada usuario obtendría su propio 'home screen'
+      '/image'             --->  POST/PUT = user                   - Conteo de actualizaciones en el perfil
+    
+   Probaremos todo con Postman.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+## /signin
+
+   - Por ahora para simular un inicio de sesión, creamos una database en el mismo "server.js" e ingresamos data de comparación desde el body.
+   - Recordemos que al recibir información del req.body, necesitamos hacer "parse" con Express. Añadimos el "Middleware con use(express.json())".
+   
+Algo así:
+
+   >  app.post('/signin', (req, res) => {
+         if (req.body.email === database.users[0].email && 
+            req.body.password === database.users[0].password) {      // Comparamos al usuario
+            res.json("success");
+         } else {
+            res.status(400).json("error logging in");
+         }
+      });
+
+      // POSTMAN  
+   >  {
+         "email": "john@gmail.com",
+         "password": "cookies"
+      }
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+## /register
+
+   >  // REGISTER POST
+      app.post('/register', (req, res) => {
+          const { email, name, password } = req.body;     // Obtenemos la data del body
+          database.users.push({                           // Añadimos a la base de datos con el body
+              id: '125',
+              name: name,
+              email: email,
+              password: password,
+              entries: 0,
+              joined: new Date()        
+          });
+          res.json(database.users[database.users.length-1]);     // Devolvemos un response con el nuevo
+      });
+
+      // POSTMAN 
+   >  {  
+         "name": "Ann",
+         "email": "ann@gmail.com",
+         "password": "apple"
+      }
+
+NOTA: Podemos ver como se añade a la base de datos artificial si hacemos el POST en '/register' y luego GET en '/'.
+      Sin embargo, al realizar un cambio en el servidor, Nodemon actualiza el servidor y por ende, la base de datos vuelve a su inicial.
+      Esto podrá evitarse más adelante cuando manejemos bases de datos reales.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+## /profile:id
+
+   >  app.get('/profile/:id', (req, res) => {
+         const { id } = req.params                       // Obtiene los parametros del "id" del URL.    
+         database.users.forEach(user => {                // Loop en los usuarios
+            if (user.id === id) {
+               return res.json(user);                    // Si existe, devuelve usuario
+            } 
+         })
+         res.status(404).json('no such user');           // Si no existe, 404.
+      });
+
+      // POSTMAN
+   > localhost:3000/profile/123      ... 124, 125
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+## /image
+
+   >  app.put('/image', (req, res) => {
+         const { id } = req.body                      // Obtiene los parametros del "id" del BODY  
+         database.users.forEach(user => {             // Loop en los usuarios al entrar
+            if (user.id === id) {
+               user.entries++;                        // Si existe, se aumenta el conteo de ingresos
+               return res.json(user.entries);         // Devolvemos las entradas del user
+            } 
+         })
+         res.status(404).json('no such user');        // Si no existe, 404.
+      });
+
+      // POSTMAN         
+   >  {     
+         "id":"123"
+      }
+
+**VÉASE EL "server.js"**
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+##
+ 
+
+BRCYPT-NODEJS:          https://www.npmjs.com/package/bcrypt-nodejs
+BCRYPT VS BCRYPT.JS:    https://github.com/kelektiv/node.bcrypt.js/wiki/bcrypt-vs-bcrypt.js
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
