@@ -183,6 +183,87 @@ NOTA: Siempre al enviar cualquier información delicada al backend utilizando HT
 BRCYPT-NODEJS:          https://www.npmjs.com/package/bcrypt-nodejs
 BCRYPT VS BCRYPT.JS:    https://github.com/kelektiv/node.bcrypt.js/wiki/bcrypt-vs-bcrypt.js
 
+IMPORTANTE: PASSWORD SECURITY: https://www.udemy.com/course/the-complete-web-developer-zero-to-mastery/learn/lecture/8767508#overview
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+## Connecting to our Front-End
+
+### Desde el Front End:
+
+   >  componentDidMount() {                     // Solo de prueba, luego lo eliminamos
+      fetch('http://localhost:3001/')
+        .then(response => response.json())
+        .then(console.log);                   // data se usa automaticamente
+     }
+     // Sin embargo, esto puede devolver el error "No Access-Control-Allow-Origin" en el browser como medida de seguridad. Usamos "no-cors"
+
+### Desde el Back End:
+
+Instalamos 'cors' en la api, importamos y usamos en el servidor:
+
+   > npm install cors
+     import cors from 'cors';
+     app.use(cors());                // Middleware para evitar el error en el browser.
+
+Procedemos a hacer la conexión con SignIn.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+## Signin
+
+Lo convertimos en un smart component para hacer su funcionalidad dentro del mismo.
+
+   >  //const SignIn = ({ onRouteChange }) => {...}
+      class SignIn extends React.Component { 
+         constructor(props) {
+            super(props);
+            this.state = {
+               signInEmail: '',
+               signInPassword: ''
+            }
+         }
+         ...
+      }
+
+Creamos estados en SignIn y procesos que evaluen el cambio. 
+Además, al hacer submit del inicio de sesión, se comunica con el servidor y verifica el usuario. 
+El servidor envía su respuesta (success o failed) y entonces viaja o no a la página home.
+
+   >  onEmailChange = (event) => {
+         this.setState({signInEmail: event.target.value});
+      }
+
+      onPasswordChange = (event) => {
+         this.setState({signInPassword: event.target.value});
+      }
+
+      onSubmitSignIn = () => {
+         //console.log(this.state);
+         fetch('http://localhost:3001/signin', {
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+               email: this.state.signInEmail,
+               password: this.state.signInPassword
+            })
+         })
+           .then(response => response.json())
+           .then(data => {
+            if (data === 'success') {
+               this.props.onRouteChange('home')
+            }
+           })
+      }
+
+A su vez, añadimos dichos cambios a las funciones de los componentes de SignIn, sean las casillas de email y password, y el botón.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+## RESTANTE
+ 
+VEASE EL PROYECTO SMART-BRAIN-PROJECT Y SMART-BRAIN-API!!!!!!!!!!!!!
+
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 ##
