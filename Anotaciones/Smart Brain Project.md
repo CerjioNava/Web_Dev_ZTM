@@ -154,8 +154,31 @@ NOTA: Podemos ver como se añade a la base de datos artificial si hacemos el POS
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
-##
+## Storing User Passwords
  
+Es importante manejar claves de manera cautelosa, al menos encriptandolas. Vamos a asegurarlo.
+Usaremos la librería "bcrypt-nodejs" aunque está ya obsoleta, pero para objeto del curso esta bien. Actualmente se usa "bcrypt o bcrypt.js".
+
+   > npm install bcrypt-nodejs
+
+Almacenaremos las password en "hashes".  Así que extraemos de la página de "bcrypt-nodejs":
+
+   >  bcrypt.hash("bacon", null, null, function(err, hash) {         // cambiamos "bacon" por password.
+         // Store hash in your password DB.
+      });
+
+      // Load hash from your password DB.
+      bcrypt.compare("bacon", hash, function(err, res) {
+          // res == true
+      });
+      bcrypt.compare("veggies", hash, function(err, res) {
+          // res = false
+      });
+
+El hash toma un string y lo encripta de manera que no sea facil de entender.
+
+NOTA: Siempre al enviar cualquier información delicada al backend utilizando HTTPS en el POST BODY.
+      Si se trata de claves, utilizamos "bcrypt" para enctriptarlas en Hash y así subirlas a la base de datos.
 
 BRCYPT-NODEJS:          https://www.npmjs.com/package/bcrypt-nodejs
 BCRYPT VS BCRYPT.JS:    https://github.com/kelektiv/node.bcrypt.js/wiki/bcrypt-vs-bcrypt.js
