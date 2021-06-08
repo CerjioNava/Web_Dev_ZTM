@@ -266,7 +266,162 @@ VEASE EL PROYECTO SMART-BRAIN-PROJECT Y SMART-BRAIN-API!!!!!!!!!!!!!
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
-##
+## DATABASE
+
+### Setting up our database
+
+Creamos una base de datos 'smartbrain' con PostgreSQL.
+
+   > psql -U postgres
+   > contraseña:  root
+   > CREATE DATABASE smartbrain; 
+
+Accedemos a la base de datos.
+
+   > psql 'smartbrain' postgres
+   > contraseña:  root
+ 
+Creamos la tabla users:
+
+   >  CREATE TABLE users (
+         id serial PRIMARY KEY,
+         name VARCHAR(100),
+         email text UNIQUE NOT NULL,            -- Al hacer UNIQUE, no se podrá repetir el email en toda la tabla.
+         entries BIGINT DEFAULT 0,
+         joined TIMESTAMP NOT NULL
+      );
+
+Creamos la tabla login:
+
+   >  CREATE TABLE login (
+         id serial PRIMARY KEY,
+         hash VARCHAR(100) NOT NULL,
+         email TEXT UNIQUE NOT NULL             -- Al hacer UNIQUE, no se podrá repetir el email en toda la tabla.
+      );    
+   
+## Connecting to the database
+
+Para conectar la base de datos a nuestro servidor Node, utilizaremos un módulo de NPM llamado "knex.js".
+Existen muchas opciones, por ahora usaremos esta que conecta con Postgres, MySQL, MariaDB, SQLite2, Oracle, etc.
+Existen otras opciones como "pg-promise"
+
+**INSTALACIÓN:   http://knexjs.org/#Installation-node** 
+
+   > npm install knex --save
+   > npm install pg
+
+Importamos y especificamos la base de datos:
+
+   >  import knex from 'knex';
+   >  const postgres = knex({
+         client: 'pg',
+         connection: {
+            host : '127.0.0.1',
+            user : 'postgres',
+            password : 'root',
+            database : 'smartbrain'
+         }
+      });
+
+Accediendo a la base de datos:
+
+   > postgres.select('*').from('users');     // Esto devuelve un promise, para extraer la información hacemos lo siguiente.
+   > db.select('*').from('users').then(data => {
+      console.log(data);
+     });
+
+#### En el Register POST:
+
+   >  return db('users')                              // De la tabla users, obtenemos todo
+         .returning('*')  
+         .insert({                                    // Insertamos la data
+           email: email,
+           name: name,   
+           joined: new Date()         
+         })
+         .then(user => {
+           res.json(user[0]); 
+         })
+         .catch(err => res.status(400).json('unable to register'));
+
+#### En el Profile GET
+
+   >  db.select('*').from('users').where({id: id})                   // De 'users' obtenemos la data donde coincidan los ID.
+        .then(user => {
+            if (user.length) {                                       // Si se devolvió usuarios, devolvemos un response.
+                res.json(user[0]);
+            } else {
+                res.status(400).json('Not Found')
+            }
+        })
+        .catch(err => res.status(400).json('Error getting user'))
+
+### En el Image PUT
+
+   >  db('users').where('id', '=', id)                               // De 'users' buscamos la data donde coincidan los ID.
+        .increment('entries', 1)                                     // Con esta función aumentamos las entradas por 1.
+        .returning('entries')
+        .then(entries => {
+            res.json(entries[0])
+        })
+        .catch(err => res.status(400).json('Unable to get entries'))
+
+### Nuevamente en el Register POST
+
+Haremos el hash del password primero.        https://www.npmjs.com/package/bcrypt-nodejs
+
+   >  const hash = bcrypt.hashSync(password);      // Encripta el password.
+
+Es importante el concepto de TRANSACTIONS:
+
+   Transactions are an important feature of relational databases, as they allow correct recovery from failures and keep a database consistent even in cases of system failure. All queries within a transaction are executed on the same database connection, and run the entire set of queries as a single unit of work. Any failure will mean the database will rollback any queries executed on that connection to the pre-transaction state.
+
+Lo usamos para hacer varias acciones simultaneas. Hacemos la transacción.
+
+   >  db.transaction(trx => {
+        trx.insert({                               // Insertamos en "login"
+            hash: hash,
+            email: email
+        })
+        .into("login")
+        .returning('email')                        // Devolvemos el "email" como "loginEmail"
+        .then(loginEmail => {                         
+            return trx('users')                    // Obtenemos la tabla 'users' (Esto es lo mismo que teníamos, pero cambiando a la transacción)
+                .returning('*')  
+                .insert({
+                    email: loginEmail[0],          // Insertamos en 'users' los datos correspondientes
+                    name: name,   
+                    joined: new Date()         
+                })
+                .then(user => {
+                    res.json(user[0]); 
+                })                                 // Hasta acá
+        })
+        .then(trx.commit)                          // Entonces hacemos el commit 
+        .catch(trx.rollback)
+      })    
+      .catch(err => res.status(400).json('unable to register'));
+
+### En el Signin POST
+   
+   >  db.select('email', 'hash').from('login')              // De la tabla 'login' obtenemos los usuarios donde coinciden los email
+         .where('email', '=', req.body.email)      
+         .then(data => {
+           console.log(data[0])
+           const isValid = bcrypt.compareSync(req.body.password, data[0].hash);     // if true (Si las password encriptadas coinciden)
+           if (isValid) {                                                           // Entonces devuelve el usuario correspondiente
+             return db.select('*').from('users') 
+               .where('email', '=', req.body.email)
+               .then(user => {
+                   res.json(user[0])
+               })
+               .catch(err => res.status(400).json('Unable to get user'))
+           } else {
+             res.status(400).json('Wrong credentials');
+           }
+         }) 
+         .catch(err => res.status(400).json('Wrong credentials'))  
+
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
