@@ -6,15 +6,16 @@
    -
    -
 
-   - BACKEND
+   * BACKEND
    - /signin
    - /register
    - /profile:id
    - /image
-   -
-   -
-   -
-   -
+   - Storing Users Password
+   - Connecting to our Front-End
+   - Database
+   
+   * DEPLOY
    -
 
 
@@ -425,6 +426,52 @@ Lo usamos para hacer varias acciones simultaneas. Hacemos la transacción.
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
-##
+## DEPLOY
+
+Usaremos Heroku para desplegar nuestro proyecto. También existen alternativas como AWS, Google Cloud, Microsoft Azure, Digital Ocean, etc.
+
+### Code Review
+
+Hacemos esto para mejorar cosas. Siempre hay cosas que se pueden mejorar.
+En este caso, hicimos algunas pocas modificaciones al FrontEnd, y en el Backend llevamos las funciones de la "app" a una carpeta de "controllers".
+
+### Security Review
+
+- Hicimos un chequeo en el backend, en los controladores de Register y SignIn para evitar casillas vacías.
+
+- También vamos a mudar clarifai al backend para que nuestra API KEY no sea accesible desde el front end.
+  Para ello instalamos clarifai en el backend y lo importamos en Image.js.
+
+### Environment Variables
+
+En vez de escuchar hacia un puerto que nosotros coloquemos (3000 por ejemplo), usamos 'process.env.PORT'.
+Es decir, creamos una "Environment Variable", esto lo hace más dinámico.
+
+En el bash:
+
+   > PORT=3000 node server.js
+
+Accedemos a ella en server.js:
+
+   > const PORT = process.env.PORT;
+
+Informacion: http://www.dowdandassociates.com/blog/content/howto-set-an-environment-variable-in-windows-command-line-and-registry/
+
+### Deploying on Heroku
+
+Errores que podamos tomar en cuenta durante esta sección:
+
+   * FRONTEND:    https://medium.com/quick-code/deploying-production-build-of-react-app-to-heroku-2548d8bf6936
+   * BACKEND:     https://devcenter.heroku.com/articles/getting-started-with-nodejs
+
+Además, ya que usamos "nodemon" como una "dev-dependency" que no se instalan en el deploy, tendremos un error "nodemon: not found".
+Esto lo solucionamos en el "package.json" de la manera:
+
+   >   "scripts": {
+          "start": "node server.js",
+          "start:dev": "nodemon server.js"
+          .....    
+        },
+
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
