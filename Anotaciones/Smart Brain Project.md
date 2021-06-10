@@ -473,5 +473,99 @@ Esto lo solucionamos en el "package.json" de la manera:
           .....    
         },
 
+DEPLOYING OF HEROKU:    https://devcenter.heroku.com/articles/git
+HEROKU:                 https://devcenter.heroku.com/articles/git
+
+- Nos registramos en Heroku (Cerjio19$03).
+
+- Necesitamos dos cosas, GIT (listo) y Heroku CLI (Descargamos el instalador de windows e instalamos, 7.53).
+
+- En Heroku subiremos nuestro Backend junto a la base de datos, para ello, vamos a nuestro proyecto API en bash:
+
+   > heroku create         // De esta manera se crea la app en nuestro directorio de GIT.
+
+- Verificamos el Git Remote:
+
+   > git remote -v         // Se observan "heroku" y "origin", ahora podemos hacer push hacia Heroku.
+
+- Hacemos push a Heroku:
+   
+   > git push heroku master      // en nuestro caso, es main.
+
+- Abrimos la app con:
+
+   > heroku open           // Para abrir el link creado anteriormente. 
+
+- Lo anterior da error, usamos el siguiente comando para verificar los logs:
+
+   > heroku logs --tall       // Debemos cambiar el puerto con "process.env.PORT"
+
+NOTA: Es necesario subir los cambios a git antes de hacer los cambios en Heroku, ya que Heroku lee directamente desde el Git.
+
+- Volvemos a hacer "heroku open" y debería funcionar.
+
+IMPORTANTE: Ahora debemos cambiar la dirección del fetching en el frontend (localhost) por el link dado por Heroku:
+
+   >  https://warm-shore-36617.herokuapp.com/
+
+Sin embargo, aún es necesario crear la base de datos en Heroku. En Heroku podemos crear una nueva base de datos Postgres para nuestra app.
+
+- Comprobamos que tenemos Heroku Postgres en nuestro proyecto:
+
+   > heroku addons
+
+- Ejecutamos el CLI:
+
+   > heroku pg:info
+
+- Y accedemos a nuestra base de datos:
+
+   > heroku pg:psql
+
+- Ahora creamos las tablas que necesitamos:
+
+// Creamos la tabla users:
+   >  CREATE TABLE users (
+         id serial PRIMARY KEY,
+         name VARCHAR(100),
+         email text UNIQUE NOT NULL,            -- Al hacer UNIQUE, no se podrá repetir el email en toda la tabla.
+         entries BIGINT DEFAULT 0,
+         joined TIMESTAMP NOT NULL
+      );
+
+// Creamos la tabla login:
+   >  CREATE TABLE login (
+         id serial PRIMARY KEY,
+         hash VARCHAR(100) NOT NULL,
+         email TEXT UNIQUE NOT NULL             
+      );    
+
+// Podemos verificar las tablas con '\d' en el bash.
+
+- Debemos arreglar la conexión del host en "knex". De 'heroku addons' extraemos el URL para el host. Sin embargo no sirve, hacemos:
+
+   >  connectionString : process.env.DATABASE_URL,       // en el knex()
+      ssl: true,
+
+- Finalmente podemos acceder a nuestra app desde el frontend e interactuar con el backend de manera correcta.
+
+//- Antes de finalizar, usaremos "serve" en el frontend para evitar algunos errores con react.
+
+//   > npm install serve --s
+
+STATIC SERVER:    https://create-react-app.dev/docs/deployment#static-server
+
+### En el frontend
+
+Finalmente, creamos una app en Heroku para el smart-brain-sn.
+
+   > heroku login
+   > heroku git:remote -a smart-brain-sn
+   > git remote -v
+   > git add .   
+   > git commit -m "deploy frontend"
+   > git push heroku main
+
+Obtenemos:   https://smart-brain-sn.herokuapp.com/
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
