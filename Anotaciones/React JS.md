@@ -14,6 +14,7 @@
    - ERROR BOUNDARY
    - DEPLOYING
    
+   - HOOKS
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -414,3 +415,87 @@ Seguir la siguiente página:
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
 
+## REACT HOOKS
+
+Hooks son funciones que permiten "enganchar" en las características "lifecycle" y "state" de React desde componentes de función. 
+Hooks no funciona dentro de clases, y permiten utilizar React sin clases.
+Hooks permite utilizar los componentes funcionales (así como card.js, scroll.js, etc) y añadir states a las funciones.
+
+En vez de cosas como "class App extends Component {... super, this, ...}"
+
+Para esta parte, modificaremos el "robofriends" y lo adaptaremos con Hooks. Lo clonaremos como "robofriends-hooks"
+
+Primero deberíamos actualizar nuestras librerías.
+
+   > npm update
+   > npm audit fix
+
+También revisamos que nuestro React sea de versión mayor a 16.8, así podremos usar hooks.
+
+## En App.js
+
+Eliminamos la importanción del Component ya que no lo necesitaremos, y añadimos los Hooks "useEffect" y "useState":
+
+   > import React, { useState, useEffect } from 'react';
+
+Convertimos la clase "App" en una función, por lo que no necesitaremos más un método constructor, ni un metodo ComponentDidMount.
+
+La función "OnSearchChange" la hacemos una variable y no necesitamos más el "render()", podemos eliminarlo y dejar el "return" de la función.
+
+Tendremos un error con el "state" ya que no existe en nuestra función, sin embargo, aquí hacemos uso del "useState".
+
+### useState Hook
+
+Es un Hook que llamamos dentro de un "Function Component" para añadir un state local. React preserva este state entre re-renders.
+Es similar a "this.setState", solo que este no combina el viejo state con el nuevo.
+
+El "useState" devuelve un par: El valor actual del state y una función que te permite actualizarlo. Es decir:
+
+   > const [robots, setRobots] = useState([]);                 // Array destructuring. Valor actual y función update, en useState() se
+   > const [searchfield, setSearchfield] = useState('');       // coloca el valor inicial del state.
+
+   > // Esto es similar al "this.state" que teníamos anteriormente en el constructor. Pero cada state esta separado y no en un objeto.
+   > this.state = { robots: [], searchfield: '' }
+
+De esta manera, en vez de usar "this.setState", usamos "setSearchfield" o "setRobots".
+
+   > setSearchfield(event.target.value)
+
+   > // Anteriormente era:
+   > this.setState({ searchfield: event.target.value });
+
+Igual en el componentDidMount (ahora useEffect):
+
+   > ... .then(users=> setRobots(users));
+
+### useEffect Hook
+
+Añade la habilidad de realizar "side effects" de una "function component". 
+Tiene el mismo propósito que "componentDidMount/Update" y "componentWillUnmount" en las clases de React, pero unificadas en una sola API.
+
+Entonces sustituimos el "componentDidMount" anterior por:
+
+   >  useEffect(() => {
+         fetch('https://jsonplaceholder.typicode.com/users')
+         .then(response => response.json())
+         .then(users=> setRobots({ robots: users }));
+      }, []);
+
+https://es.reactjs.org/docs/getting-started.html
+
+## RULES OF HOOKS
+
+   https://es.reactjs.org/docs/hooks-rules.html
+
+### Llama Hooks solo en el nivel superior
+
+   No llames Hooks dentro de ciclos, condicionales o funciones anidadas. En cambio, usa siempre Hooks en el nivel superior de tu función en React, antes de cualquier retorno prematuro. Siguiendo esta regla, te aseguras de que los hooks se llamen en el mismo orden cada vez que un componente se renderiza. Esto es lo que permite a React preservar correctamente el estado de los hooks entre multiples llamados a useState y useEffect. 
+
+### Llama Hooks solo en funciones de React. 
+
+No llames Hooks desde funciones JavaScript regulares. En vez de eso, puedes:
+
+   * Llama Hooks desde componentes funcionales de React.
+   * Llama Hooks desde Hooks personalizados
+
+Referencia de la API de Hooks:      https://es.reactjs.org/docs/hooks-reference.html

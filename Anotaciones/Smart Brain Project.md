@@ -569,3 +569,5 @@ Finalmente, creamos una app en Heroku para el smart-brain-sn.
 Obtenemos:   https://smart-brain-sn.herokuapp.com/
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
+
+heroku git:remote -a warm-shore-36617
